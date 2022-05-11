@@ -1,0 +1,59 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: target-service-rollout
+  namespace: apex  
+spec:
+  replicas: 1
+  strategy:
+    canary:
+      trafficRouting:
+        istio:
+          virtualService: 
+            name: target-service-vsvc        # required
+            routes:
+            - primary                 # optional if there is a single route in VirtualService
+          destinationRule:
+            name: target-service-destrule    # required
+            canarySubsetName: canary  # required
+            stableSubsetName: stable  # required  
+      steps:      
+      - setWeight: 20
+      - pause: {}
+      - setWeight: 40
+      - pause: {duration: 2m}
+      - setWeight: 60
+      - pause: {duration: 2m}
+      - setWeight: 80
+      - pause: {duration: 2m}
+      analysis:
+        templates:
+        - templateName: request-success
+        startingStep: 2 # delay starting analysis run until setWeight: 40%
+        args:
+        - name: service-name
+          value: target-service.apex.svc.cluster.local
+  revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      app: target-service
+  template:
+    metadata:
+      labels:
+        app: target-service
+        istio-injection: enabled
+    spec:
+      containers:
+      - name: target-service
+        image: parthakonwar/target-service:v1
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        env:
+        - name: VERSION
+          value: "v1"          
+        resources:
+          requests:
+            memory: 32Mi
+            cpu: 5m
