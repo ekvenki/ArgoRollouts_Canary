@@ -1,26 +1,26 @@
 # ArgoRollouts_Canary
 I. Pre-requisite
 =================
-#1. Install kubectl
+1. Install kubectl
 curl -o kubectl https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
 chmod +x ./kubectl
 mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin
 echo 'export PATH=$PATH:$HOME/bin' >> ~/.bashrc
 kubectl version --short --client
 
-#2. Install eksctl
+2. Install eksctl
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 sudo mv /tmp/eksctl /usr/local/bin
 eksctl version
 
 
-#3. Install kubectl argo plugin
+3. Install kubectl argo plugin
 curl -LO https://github.com/argoproj/argo-rollouts/releases/latest/download/kubectl-argo-rollouts-linux-amd64
 chmod +x ./kubectl-argo-rollouts-linux-amd64
 sudo mv ./kubectl-argo-rollouts-linux-amd64 /usr/local/bin/kubectl-argo-rollouts
 kubectl argo rollouts version
 
-#4. Install git:
+4. Install git:
 #Perform a quick update on your instance:
 sudo yum update -y
 
@@ -30,7 +30,7 @@ sudo yum install git -y
 #Check git version
 git version
 
-#5. Install docker
+5. Install docker
 # Install Docker
 sudo yum update -y
 sudo yum -y install docker
@@ -43,7 +43,7 @@ sudo usermod -a -G docker ec2-user
 sudo chmod 666 /var/run/docker.sock
 docker version
 
-#6. Install Istio:
+6. Install Istio:
 curl -L https://git.io/getLatestIstio | sh -
 sudo cp -v istio-1.12.0/bin/istioctl /usr/local/bin/
 
